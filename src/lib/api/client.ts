@@ -4,6 +4,9 @@ const API_BASE = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api'
 
+console.log('[API Client] VITE_API_URL:', import.meta.env.VITE_API_URL)
+console.log('[API Client] API_BASE:', API_BASE)
+
 export class ApiError extends Error {
   constructor(
     public status: number,
