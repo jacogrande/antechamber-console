@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import type { Session, User, AuthError } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
-import { setTenantId, clearTenantId } from '@/lib/api/client'
+import { setTenantId, clearTenantId, API_BASE } from '@/lib/api/client'
 
 interface AuthState {
   session: Session | null
@@ -65,7 +65,7 @@ export function useAuth() {
     async (email: string, password: string): Promise<AuthResult> => {
       try {
         // Call our API login endpoint which returns tenants
-        const response = await fetch('/api/auth/login', {
+        const response = await fetch(`${API_BASE}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
