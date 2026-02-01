@@ -4,6 +4,35 @@ interface SparklineProps {
   height?: number
   color?: string
   showFill?: boolean
+  showEndDot?: boolean
+}
+
+// Convert points to a smooth cubic bezier path using Catmull-Rom spline
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length < 2) return ''
+  if (points.length === 2) {
+    return `M ${points[0].x} ${points[0].y} L ${points[1].x} ${points[1].y}`
+  }
+
+  let path = `M ${points[0].x} ${points[0].y}`
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[Math.max(0, i - 1)]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[Math.min(points.length - 1, i + 2)]
+
+    // Catmull-Rom to Cubic Bezier conversion
+    const tension = 6 // Higher = smoother curves
+    const cp1x = p1.x + (p2.x - p0.x) / tension
+    const cp1y = p1.y + (p2.y - p0.y) / tension
+    const cp2x = p2.x - (p3.x - p1.x) / tension
+    const cp2y = p2.y - (p3.y - p1.y) / tension
+
+    path += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`
+  }
+
+  return path
 }
 
 export function Sparkline({
@@ -12,6 +41,7 @@ export function Sparkline({
   height = 40,
   color,
   showFill = true,
+  showEndDot = false,
 }: SparklineProps) {
   const lineColor = color ?? 'hsl(var(--primary))'
 
@@ -26,28 +56,31 @@ export function Sparkline({
 
   const normalized = data.map((v) => (v - min) / range)
 
-  // Generate SVG path
+  // Use percentage-based coordinates for proper stretching
+  const viewBoxWidth = 100
+  const viewBoxHeight = 100
+  const padding = 4
+
+  // Generate points as percentages
   const points = normalized.map((value, index) => {
-    const x = (index / (data.length - 1)) * 100
-    const y = (1 - value) * (height - 4) + 2
+    const x = (index / (data.length - 1)) * (viewBoxWidth - padding * 2) + padding
+    const y = (1 - value) * (viewBoxHeight - padding * 2) + padding
     return { x, y }
   })
 
-  // Create line path
-  const linePath = points
-    .map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`)
-    .join(' ')
+  // Create smooth line path
+  const linePath = smoothPath(points)
 
-  // Create fill path
-  const fillPath = `${linePath} L 100 ${height} L 0 ${height} Z`
+  // Create fill path (close the shape at the bottom)
+  const fillPath = `${linePath} L ${viewBoxWidth - padding} ${viewBoxHeight} L ${padding} ${viewBoxHeight} Z`
 
   return (
     <svg
       width={width}
       height={height}
-      viewBox={`0 0 100 ${height}`}
+      viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
       preserveAspectRatio="none"
-      className="[&_path]:transition-all [&_path]:duration-300 motion-reduce:[&_path]:transition-none"
+      className="block"
     >
       {showFill && (
         <path
@@ -60,17 +93,18 @@ export function Sparkline({
         d={linePath}
         fill="none"
         stroke={lineColor}
-        strokeWidth={2}
+        strokeWidth={1.5}
         strokeLinecap="round"
         strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
       />
-      <circle
-        cx={points[points.length - 1].x}
-        cy={points[points.length - 1].y}
-        r={3}
-        fill={lineColor}
-      />
+      {showEndDot && (
+        <circle
+          cx={points[points.length - 1].x}
+          cy={points[points.length - 1].y}
+          r={2.5}
+          fill={lineColor}
+        />
+      )}
     </svg>
   )
 }

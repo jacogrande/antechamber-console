@@ -79,7 +79,7 @@ const config: Config = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['Geist', 'system-ui', 'sans-serif'],
+        sans: ['Switzer', 'system-ui', 'sans-serif'],
         mono: ['Geist Mono', 'ui-monospace', 'monospace'],
       },
       fontSize: {

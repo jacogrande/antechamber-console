@@ -79,7 +79,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
             <Cmdk.Input
               placeholder="Type a command or search..."
               autoFocus
-              className="flex-1 text-base bg-transparent border-none outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 rounded-md"
+              className="flex-1 text-base bg-transparent border-none px-2 outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0 rounded-md"
             />
           </div>
 

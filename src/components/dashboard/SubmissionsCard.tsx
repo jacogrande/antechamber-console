@@ -40,8 +40,8 @@ export function SubmissionsCard({
   const displayTrendData = trendData ?? generateMockTrend(total)
 
   return (
-    <Card className="h-full">
-      <CardContent className="p-6">
+    <Card className="h-full flex flex-col">
+      <CardContent className="p-6 flex-1 flex flex-col">
         <div className="flex items-start gap-4">
           <div className="rounded-xl bg-muted p-3">
             <Inbox className="h-6 w-6" />
@@ -68,11 +68,11 @@ export function SubmissionsCard({
                 confirmed
               </span>
             </div>
-            {/* Sparkline */}
-            <div className="mt-2">
-              <Sparkline data={displayTrendData} height={48} />
-            </div>
           </div>
+        </div>
+        {/* Sparkline - full width at bottom */}
+        <div className="mt-auto pt-4 -mx-6 -mb-6 px-6 pb-6">
+          <Sparkline data={displayTrendData} height={56} />
         </div>
       </CardContent>
     </Card>
