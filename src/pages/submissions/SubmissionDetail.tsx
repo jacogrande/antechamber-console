@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useParams, Link } from 'react-router-dom'
-import { ChevronRight, ExternalLink, Check, AlertCircle, Pencil } from 'lucide-react'
+import { ChevronRight, ExternalLink, Check, AlertCircle, Pencil, Download, FileJson } from 'lucide-react'
 import { useSubmission, useConfirmSubmission } from '@/hooks/useSubmissions'
+import { exportSubmissionCsv, exportContextPack } from '@/lib/api/submissions'
 import { LoadingSpinner, ConfirmDialog } from '@/components/common'
 import { SubmissionStatusBadge } from '@/components/dashboard/SubmissionStatusBadge'
 import { WorkflowProgress } from '@/components/submissions/WorkflowProgress'
@@ -27,6 +28,7 @@ export function SubmissionDetail() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [fieldEdits, setFieldEdits] = useState<Record<string, unknown>>({})
+  const [isExporting, setIsExporting] = useState(false)
 
   const handleFieldEdit = (fieldKey: string, value: unknown) => {
     setFieldEdits((prev) => ({ ...prev, [fieldKey]: value }))
@@ -35,6 +37,47 @@ export function SubmissionDetail() {
   const handleCancelEdit = () => {
     setIsEditing(false)
     setFieldEdits({})
+  }
+
+  const triggerDownload = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleExportCsv = async () => {
+    if (!id) return
+    setIsExporting(true)
+    try {
+      const blob = await exportSubmissionCsv(id)
+      triggerDownload(blob, `submission-${id}.csv`)
+    } catch (err) {
+      toast.error('Failed to export CSV', {
+        description: err instanceof Error ? err.message : 'An error occurred',
+      })
+    } finally {
+      setIsExporting(false)
+    }
+  }
+
+  const handleExportContextPack = async () => {
+    if (!id) return
+    setIsExporting(true)
+    try {
+      const blob = await exportContextPack(id)
+      triggerDownload(blob, `submission-${id}-context-pack.json`)
+    } catch (err) {
+      toast.error('Failed to export context pack', {
+        description: err instanceof Error ? err.message : 'An error occurred',
+      })
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   const handleConfirm = async () => {
@@ -71,7 +114,7 @@ export function SubmissionDetail() {
         <AlertCircle className="h-4 w-4" />
         <AlertDescription className="flex items-center gap-2">
           Failed to load submission.
-          <Button variant="link" size="sm" onClick={() => refetch()} className="h-auto p-0">
+          <Button variant="link" size="sm" onClick={() => void refetch()} className="h-auto p-0">
             Retry
           </Button>
         </AlertDescription>
@@ -85,8 +128,8 @@ export function SubmissionDetail() {
     <div>
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-muted-foreground mb-4">
-        <Link to="/" className="hover:text-foreground">
-          Dashboard
+        <Link to="/submissions" className="hover:text-foreground">
+          Submissions
         </Link>
         <ChevronRight className="h-4 w-4" />
         <span className="text-foreground">Submission</span>
@@ -253,6 +296,16 @@ export function SubmissionDetail() {
                 </p>
               )}
             </div>
+            <div className="flex items-center gap-2 mt-4">
+              <Button variant="outline" size="sm" onClick={() => void handleExportCsv()} disabled={isExporting}>
+                <Download className="h-4 w-4 mr-2" />
+                Download CSV
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => void handleExportContextPack()} disabled={isExporting}>
+                <FileJson className="h-4 w-4 mr-2" />
+                Download Context Pack
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -260,7 +313,7 @@ export function SubmissionDetail() {
       <ConfirmDialog
         isOpen={isConfirmOpen}
         onClose={() => setIsConfirmOpen(false)}
-        onConfirm={handleConfirm}
+        onConfirm={() => void handleConfirm()}
         title="Confirm Submission"
         message="Are you sure you want to confirm this submission? This will trigger webhook delivery and mark the submission as final."
         confirmLabel="Confirm"

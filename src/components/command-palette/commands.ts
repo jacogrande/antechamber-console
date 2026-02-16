@@ -2,6 +2,8 @@ import {
   Home,
   FileText,
   Globe,
+  Inbox,
+  ScrollText,
   Settings,
   Plus,
   Moon,
@@ -43,6 +45,15 @@ export const navigationCommands: Command[] = [
     path: '/schemas',
   },
   {
+    id: 'nav-submissions',
+    label: 'Go to Submissions',
+    icon: Inbox,
+    shortcut: 'G U',
+    group: 'navigation',
+    action: 'navigate',
+    path: '/submissions',
+  },
+  {
     id: 'nav-webhooks',
     label: 'Go to Webhooks',
     icon: Globe,
@@ -50,6 +61,15 @@ export const navigationCommands: Command[] = [
     group: 'navigation',
     action: 'navigate',
     path: '/webhooks',
+  },
+  {
+    id: 'nav-audit',
+    label: 'Go to Audit Log',
+    icon: ScrollText,
+    shortcut: 'G A',
+    group: 'navigation',
+    action: 'navigate',
+    path: '/audit',
   },
   {
     id: 'nav-settings',
@@ -73,7 +93,7 @@ export const actionCommands: Command[] = [
     shortcut: 'N S',
     group: 'actions',
     action: 'navigate',
-    path: '/schemas/create',
+    path: '/schemas/new',
   },
 ]
 

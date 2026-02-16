@@ -4,9 +4,6 @@ export const API_BASE = import.meta.env.VITE_API_URL
   ? `${import.meta.env.VITE_API_URL}/api`
   : '/api'
 
-console.log('[API Client] VITE_API_URL:', import.meta.env.VITE_API_URL)
-console.log('[API Client] API_BASE:', API_BASE)
-
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -52,11 +49,8 @@ async function getAuthHeadersOnly(): Promise<Headers> {
     data: { session },
   } = await supabase.auth.getSession()
 
-  console.log('[API] getSession result - hasSession:', !!session, 'hasToken:', !!session?.access_token)
-
   if (session?.access_token) {
     headers.set('Authorization', `Bearer ${session.access_token}`)
-    console.log('[API] Token (first 50 chars):', session.access_token.substring(0, 50) + '...')
   } else {
     console.warn('[API] No session/token available!')
   }
@@ -64,7 +58,7 @@ async function getAuthHeadersOnly(): Promise<Headers> {
   return headers
 }
 
-async function getAuthHeaders(): Promise<Headers> {
+export async function getAuthHeaders(): Promise<Headers> {
   const headers = await getAuthHeadersOnly()
 
   try {
@@ -110,6 +104,26 @@ export async function apiPost<T>(path: string, body?: unknown): Promise<T> {
   const headers = await getAuthHeaders()
   const response = await fetch(`${API_BASE}${path}`, {
     method: 'POST',
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  return handleResponse<T>(response)
+}
+
+export async function apiPut<T>(path: string, body?: unknown): Promise<T> {
+  const headers = await getAuthHeaders()
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: 'PUT',
+    headers,
+    body: body ? JSON.stringify(body) : undefined,
+  })
+  return handleResponse<T>(response)
+}
+
+export async function apiPatch<T>(path: string, body?: unknown): Promise<T> {
+  const headers = await getAuthHeaders()
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: 'PATCH',
     headers,
     body: body ? JSON.stringify(body) : undefined,
   })

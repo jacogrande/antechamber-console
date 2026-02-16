@@ -40,7 +40,7 @@ function SchemaCreateContent() {
   return (
     <div className="h-[calc(100vh-64px)] -mx-6 -mb-6">
       <SchemaBuilder
-        onSave={handleSave}
+        onSave={() => void handleSave()}
         onCancel={handleCancel}
         isSaving={createSchema.isPending}
         saveLabel="Create Schema"

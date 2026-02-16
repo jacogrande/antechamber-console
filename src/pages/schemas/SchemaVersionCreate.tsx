@@ -34,7 +34,7 @@ function SchemaVersionCreateContent({ schemaId }: { schemaId: string }) {
   return (
     <div className="h-[calc(100vh-64px)] -mx-6 -mb-6">
       <SchemaBuilder
-        onSave={handleSave}
+        onSave={() => void handleSave()}
         onCancel={handleCancel}
         isSaving={createVersion.isPending}
         saveLabel="Create Version"

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { BarChart3, ClipboardList, Link2, Settings } from 'lucide-react'
+import { BarChart3, ClipboardList, Inbox, Key, Link2, ScrollText, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { LucideIcon } from 'lucide-react'
 
@@ -12,7 +12,10 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Dashboard', path: '/', icon: BarChart3 },
   { label: 'Schemas', path: '/schemas', icon: ClipboardList },
+  { label: 'Submissions', path: '/submissions', icon: Inbox },
   { label: 'Webhooks', path: '/webhooks', icon: Link2 },
+  { label: 'API Keys', path: '/api-keys', icon: Key },
+  { label: 'Audit Log', path: '/audit', icon: ScrollText },
   { label: 'Settings', path: '/settings', icon: Settings },
 ]
 

@@ -49,7 +49,7 @@ export function useCreateSchema() {
   return useMutation({
     mutationFn: (input: CreateSchemaInput) => createSchema(input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: schemaKeys.lists() })
+      void queryClient.invalidateQueries({ queryKey: schemaKeys.lists() })
     },
   })
 }
@@ -60,7 +60,7 @@ export function useCreateSchemaVersion(schemaId: string) {
   return useMutation({
     mutationFn: (input: CreateSchemaVersionInput) => createSchemaVersion(schemaId, input),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: schemaKeys.detail(schemaId) })
+      void queryClient.invalidateQueries({ queryKey: schemaKeys.detail(schemaId) })
     },
   })
 }
@@ -72,7 +72,7 @@ export function useDeleteSchema() {
     mutationFn: (schemaId: string) => deleteSchema(schemaId),
     onSuccess: (_data, schemaId) => {
       // Invalidate lists to remove deleted schema
-      queryClient.invalidateQueries({ queryKey: schemaKeys.lists() })
+      void queryClient.invalidateQueries({ queryKey: schemaKeys.lists() })
       // Remove the detail query from cache
       queryClient.removeQueries({ queryKey: schemaKeys.detail(schemaId) })
     },

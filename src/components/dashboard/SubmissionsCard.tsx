@@ -1,5 +1,4 @@
 import { Inbox } from 'lucide-react'
-import { Sparkline } from './Sparkline'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 
@@ -8,7 +7,6 @@ interface SubmissionsCardProps {
   pending: number
   draft: number
   confirmed: number
-  trendData?: number[]
   isLoading?: boolean
 }
 
@@ -17,7 +15,6 @@ export function SubmissionsCard({
   pending,
   draft,
   confirmed,
-  trendData,
   isLoading = false,
 }: SubmissionsCardProps) {
   if (isLoading) {
@@ -36,8 +33,6 @@ export function SubmissionsCard({
       </Card>
     )
   }
-
-  const displayTrendData = trendData ?? generateMockTrend(total)
 
   return (
     <Card className="h-full flex flex-col">
@@ -70,28 +65,7 @@ export function SubmissionsCard({
             </div>
           </div>
         </div>
-        {/* Sparkline - full width at bottom */}
-        <div className="mt-auto pt-4 -mx-6 -mb-6 px-6 pb-6">
-          <Sparkline data={displayTrendData} height={56} />
-        </div>
       </CardContent>
     </Card>
   )
-}
-
-function generateMockTrend(total: number): number[] {
-  if (total === 0) return [0, 0, 0, 0, 0, 0, 0]
-
-  const points: number[] = []
-  let current = Math.max(1, Math.floor(total * 0.3))
-
-  for (let i = 0; i < 7; i++) {
-    points.push(current)
-    const change = (Math.random() - 0.3) * (total * 0.2)
-    current = Math.max(1, Math.min(total, current + change))
-  }
-
-  points[6] = total
-
-  return points
 }

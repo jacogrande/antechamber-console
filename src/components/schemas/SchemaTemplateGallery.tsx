@@ -261,7 +261,7 @@ export function SchemaTemplateGallery({
                   <div className="px-6 py-4">
                     {selectedCategory !== 'all' && (
                       <p className="text-sm text-muted-foreground mb-4">
-                        {categoryDescriptions[selectedCategory as SchemaCategory]}
+                        {categoryDescriptions[selectedCategory]}
                       </p>
                     )}
 

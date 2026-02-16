@@ -2,6 +2,7 @@ import { useReducer, useCallback } from 'react'
 import type { FieldDefinition, FieldType } from '@/types/schema'
 import type { UndoAction, UndoHistory } from '@/domain/undo/models/undo-action'
 import * as undoHistory from '@/domain/undo/services/undo-history'
+import { generateKey, createField } from '@/domain/schema/services/schema-builder'
 
 export interface BuilderState {
   name: string
@@ -24,52 +25,6 @@ export type BuilderAction =
   | { type: 'RESET' }
   | { type: 'UNDO' }
   | { type: 'REDO' }
-
-function generateKey(label: string): string {
-  return label
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '_')
-    .replace(/^_|_$/g, '')
-    .slice(0, 100)
-}
-
-function getDefaultLabel(fieldType: FieldType): string {
-  const labels: Record<FieldType, string> = {
-    string: 'New Text Field',
-    number: 'New Number Field',
-    boolean: 'New Yes/No Field',
-    enum: 'New Choice Field',
-    'string[]': 'New List Field',
-  }
-  return labels[fieldType]
-}
-
-function createField(fieldType: FieldType, existingKeys: string[]): FieldDefinition {
-  const baseLabel = getDefaultLabel(fieldType)
-  let label = baseLabel
-  let key = generateKey(label)
-  let counter = 1
-
-  while (existingKeys.includes(key)) {
-    counter++
-    label = `${baseLabel} ${counter}`
-    key = generateKey(label)
-  }
-
-  const field: FieldDefinition = {
-    key,
-    label,
-    type: fieldType,
-    required: false,
-    instructions: '',
-  }
-
-  if (fieldType === 'enum') {
-    field.enumOptions = ['Option 1', 'Option 2']
-  }
-
-  return field
-}
 
 function applyUndoAction(state: BuilderState, action: UndoAction): BuilderState {
   switch (action.type) {

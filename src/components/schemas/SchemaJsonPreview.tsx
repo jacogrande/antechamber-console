@@ -29,7 +29,7 @@ export function SchemaJsonPreview() {
             variant="ghost"
             size="icon"
             className="h-8 w-8"
-            onClick={handleCopy}
+            onClick={() => void handleCopy()}
             aria-label="Copy JSON"
           >
             <Copy className="h-4 w-4" />

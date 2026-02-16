@@ -121,7 +121,7 @@ export function SchemaDetail() {
       <ConfirmDialog
         isOpen={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
-        onConfirm={handleDelete}
+        onConfirm={() => void handleDelete()}
         title="Delete Schema"
         message={`Are you sure you want to delete "${schema.name}"? This action cannot be undone.`}
         confirmLabel="Delete"

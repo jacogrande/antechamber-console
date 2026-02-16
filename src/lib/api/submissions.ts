@@ -1,4 +1,4 @@
-import { apiGet, apiPost } from './client'
+import { apiGet, apiPost, getAuthHeaders, API_BASE, ApiError } from './client'
 import type {
   SubmissionsListResponse,
   SubmissionDetailResponse,
@@ -60,4 +60,30 @@ export async function confirmSubmission(id: string, params?: ConfirmSubmissionPa
     confirmedBy: 'internal',
     edits: params?.edits,
   })
+}
+
+async function handleBlobResponse(response: Response, fallbackMessage: string): Promise<Blob> {
+  if (!response.ok) {
+    let errorMessage = fallbackMessage
+    try {
+      const errorData = await response.json() as { error?: { message?: string } }
+      errorMessage = errorData?.error?.message ?? errorMessage
+    } catch {
+      // Response body may not be JSON
+    }
+    throw new ApiError(response.status, 'EXPORT_ERROR', errorMessage)
+  }
+  return response.blob()
+}
+
+export async function exportSubmissionCsv(id: string): Promise<Blob> {
+  const headers = await getAuthHeaders()
+  const response = await fetch(`${API_BASE}/submissions/${id}/export/csv`, { headers })
+  return handleBlobResponse(response, 'Failed to export CSV')
+}
+
+export async function exportContextPack(id: string): Promise<Blob> {
+  const headers = await getAuthHeaders()
+  const response = await fetch(`${API_BASE}/submissions/${id}/context-pack`, { headers })
+  return handleBlobResponse(response, 'Failed to export context pack')
 }

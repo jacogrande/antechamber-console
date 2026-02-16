@@ -23,6 +23,10 @@ export default tseslint.config(
         'error',
         { prefer: 'type-imports' },
       ],
+      '@typescript-eslint/no-floating-promises': 'error',
+      '@typescript-eslint/no-misused-promises': 'error',
+      '@typescript-eslint/await-thenable': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'warn',
     },
   },
   {
@@ -30,6 +34,15 @@ export default tseslint.config(
     files: ['src/components/ui/**/*.tsx'],
     rules: {
       '@typescript-eslint/no-empty-object-type': 'off',
+    },
+  },
+  {
+    files: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    rules: {
+      '@typescript-eslint/await-thenable': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'off',
+      'no-constant-binary-expression': 'off',
     },
   },
   {

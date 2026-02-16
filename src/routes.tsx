@@ -11,8 +11,10 @@ import {
   SchemaDetail,
   SchemaVersionCreate,
 } from '@/pages/schemas'
-import { SubmissionDetail } from '@/pages/submissions'
+import { Submissions, SubmissionDetail } from '@/pages/submissions'
 import { Webhooks } from '@/pages/webhooks'
+import { PublishableKeys } from '@/pages/publishable-keys'
+import { AuditLog } from '@/pages/audit'
 import { Settings } from '@/pages/Settings'
 import { OrganizationSetup } from '@/pages/setup'
 
@@ -68,12 +70,24 @@ export const router = createBrowserRouter([
         element: <SchemaVersionCreate />,
       },
       {
+        path: '/submissions',
+        element: <Submissions />,
+      },
+      {
         path: '/submissions/:id',
         element: <SubmissionDetail />,
       },
       {
         path: '/webhooks',
         element: <Webhooks />,
+      },
+      {
+        path: '/api-keys',
+        element: <PublishableKeys />,
+      },
+      {
+        path: '/audit',
+        element: <AuditLog />,
       },
       {
         path: '/settings',

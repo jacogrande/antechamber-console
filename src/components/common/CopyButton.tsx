@@ -40,7 +40,7 @@ export function CopyButton({ value, label = 'Copy', size = 'sm' }: CopyButtonPro
           variant="ghost"
           size="icon"
           className={cn(sizeClasses[size])}
-          onClick={handleClick}
+          onClick={() => void handleClick()}
           aria-label={hasCopied ? 'Copied' : label}
         >
           {hasCopied ? (
