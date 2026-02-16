@@ -29,6 +29,11 @@ export interface DashboardStats {
     failed: number
   }
   webhooks: { active: number }
+  llmUsage?: {
+    totalInputTokens: number
+    totalOutputTokens: number
+    estimatedCostUsd: number
+  }
 }
 
 export interface Tenant {

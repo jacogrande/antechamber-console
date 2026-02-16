@@ -1,4 +1,4 @@
-import { FileText, Globe, Plus } from 'lucide-react'
+import { DollarSign, FileText, Globe, Plus } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
 import { useStats, useSubmissions } from '@/hooks/useSubmissions'
 import { useDisclosure } from '@/hooks/useDisclosure'
@@ -153,6 +153,27 @@ export function Dashboard() {
           />
         </div>
       </BentoGrid>
+
+      {/* LLM cost card */}
+      {stats?.llmUsage && stats.llmUsage.totalInputTokens + stats.llmUsage.totalOutputTokens > 0 && (
+        <div className="mb-8 max-w-xs">
+          <StatCard
+            icon={<DollarSign className="h-5 w-5" />}
+            label="LLM Cost"
+            value={
+              stats.llmUsage.estimatedCostUsd === 0
+                ? '$0.00'
+                : stats.llmUsage.estimatedCostUsd < 0.01
+                  ? '< $0.01'
+                  : `$${stats.llmUsage.estimatedCostUsd.toFixed(2)}`
+            }
+            helpText={`${stats.llmUsage.totalInputTokens.toLocaleString()} in / ${stats.llmUsage.totalOutputTokens.toLocaleString()} out tokens`}
+            colorScheme="warning"
+            isLoading={statsLoading}
+            size="sm"
+          />
+        </div>
+      )}
 
       {/* Empty state */}
       {!statsLoading && !hasData && (

@@ -13,11 +13,19 @@ interface StatCardProps {
   size?: 'sm' | 'md'
 }
 
+const iconColorMap: Record<string, string> = {
+  brand: 'bg-primary/10 text-primary',
+  success: 'bg-green-500/10 text-green-600 dark:text-green-400',
+  warning: 'bg-amber-500/10 text-amber-600 dark:text-amber-400',
+  error: 'bg-red-500/10 text-red-600 dark:text-red-400',
+}
+
 export function StatCard({
   icon,
   label,
   value,
   helpText,
+  colorScheme,
   isLoading = false,
   size = 'md',
 }: StatCardProps) {
@@ -46,7 +54,8 @@ export function StatCard({
         <div className={cn('flex items-start', isSmall ? 'gap-3' : 'gap-4')}>
           <div
             className={cn(
-              'rounded-lg bg-muted',
+              'rounded-lg',
+              colorScheme ? iconColorMap[colorScheme] : 'bg-muted',
               isSmall ? 'p-2' : 'p-3'
             )}
           >
