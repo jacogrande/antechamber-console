@@ -116,19 +116,6 @@ export function useAuth() {
         password,
       })
 
-      // Debug logging - check browser console
-      console.log('[signUp] Supabase response:', {
-        error,
-        user: data.user ? {
-          id: data.user.id,
-          email: data.user.email,
-          confirmed_at: data.user.confirmed_at,
-          identities: data.user.identities,
-          email_confirmed_at: data.user.email_confirmed_at,
-        } : null,
-        session: data.session ? 'exists' : null,
-      })
-
       // Check for "fake success" - user exists but no identities means duplicate email
       if (!error && data.user && data.user.identities?.length === 0) {
         return {

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { useParams, Link } from 'react-router-dom'
-import { ChevronRight, ExternalLink, Check, AlertCircle, Pencil, Download, FileJson } from 'lucide-react'
-import { useSubmission, useConfirmSubmission } from '@/hooks/useSubmissions'
+import { ChevronRight, ExternalLink, Check, AlertCircle, Pencil, Download, FileJson, RefreshCw } from 'lucide-react'
+import { useSubmission, useConfirmSubmission, useRetrySubmission } from '@/hooks/useSubmissions'
 import { exportSubmissionCsv, exportContextPack } from '@/lib/api/submissions'
 import { LoadingSpinner, ConfirmDialog } from '@/components/common'
 import { SubmissionStatusBadge } from '@/components/dashboard/SubmissionStatusBadge'
@@ -25,6 +25,7 @@ export function SubmissionDetail() {
   const { id } = useParams<{ id: string }>()
   const { data, isLoading, error, refetch } = useSubmission(id)
   const confirmMutation = useConfirmSubmission()
+  const retryMutation = useRetrySubmission()
   const [isConfirmOpen, setIsConfirmOpen] = useState(false)
   const [isEditing, setIsEditing] = useState(false)
   const [fieldEdits, setFieldEdits] = useState<Record<string, unknown>>({})
@@ -77,6 +78,20 @@ export function SubmissionDetail() {
       })
     } finally {
       setIsExporting(false)
+    }
+  }
+
+  const handleRetry = async () => {
+    if (!id) return
+    try {
+      await retryMutation.mutateAsync(id)
+      toast.success('Submission retry started', {
+        description: 'The workflow has been re-triggered.',
+      })
+    } catch (err) {
+      toast.error('Failed to retry submission', {
+        description: err instanceof Error ? err.message : 'An error occurred',
+      })
     }
   }
 
@@ -158,6 +173,14 @@ export function SubmissionDetail() {
             {submission.schemaName && ` • Schema: ${submission.schemaName}`}
           </p>
         </div>
+        {submission.status === 'failed' && (
+          <div className="flex items-center gap-2">
+            <Button onClick={() => void handleRetry()} disabled={retryMutation.isPending}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${retryMutation.isPending ? 'animate-spin' : ''}`} />
+              {retryMutation.isPending ? 'Retrying...' : 'Retry Submission'}
+            </Button>
+          </div>
+        )}
         {submission.status === 'draft' && (
           <div className="flex items-center gap-2">
             {isEditing ? (

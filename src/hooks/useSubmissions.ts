@@ -4,6 +4,7 @@ import {
   createSubmission,
   getSubmission,
   confirmSubmission,
+  retrySubmission,
   type ListSubmissionsParams,
   type CreateSubmissionParams,
   type ConfirmSubmissionParams,
@@ -56,6 +57,22 @@ export function useSubmission(id: string | undefined) {
     queryKey: submissionKeys.detail(id!),
     queryFn: () => getSubmission(id!),
     enabled: !!id,
+  })
+}
+
+export function useRetrySubmission() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: string) => retrySubmission(id),
+    onSuccess: (_data, id) => {
+      // Invalidate the specific submission detail
+      void queryClient.invalidateQueries({ queryKey: submissionKeys.detail(id) })
+      // Invalidate submissions list
+      void queryClient.invalidateQueries({ queryKey: submissionKeys.lists() })
+      // Invalidate stats
+      void queryClient.invalidateQueries({ queryKey: statsKeys.all })
+    },
   })
 }
 

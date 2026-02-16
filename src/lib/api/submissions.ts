@@ -62,6 +62,10 @@ export async function confirmSubmission(id: string, params?: ConfirmSubmissionPa
   })
 }
 
+export async function retrySubmission(id: string): Promise<CreateSubmissionResponse> {
+  return apiPost<CreateSubmissionResponse>(`/submissions/${id}/retry`)
+}
+
 async function handleBlobResponse(response: Response, fallbackMessage: string): Promise<Blob> {
   if (!response.ok) {
     let errorMessage = fallbackMessage
