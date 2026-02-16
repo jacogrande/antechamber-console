@@ -161,8 +161,8 @@ export function SubmissionDetail() {
           <div className="flex items-center justify-between">
             <CardTitle className="text-base">Extracted Fields</CardTitle>
             <span className="text-sm text-muted-foreground">
-              {(submission.extractedFields ?? []).filter((f) => f.status === 'found').length} /{' '}
-              {(submission.extractedFields ?? []).length} found
+              {(submission.extractedFields ?? []).filter((f) => f.status === 'auto' || f.status === 'user_edited').length} /{' '}
+              {(submission.extractedFields ?? []).length} resolved
             </span>
           </div>
         </CardHeader>

@@ -1,4 +1,7 @@
-export type SubmissionStatus = 'pending' | 'draft' | 'confirmed' | 'failed'
+import type { SubmissionStatus, ExtractedField } from '@antechamber/types'
+
+export type { Citation, FieldStatus, SubmissionStatus } from '@antechamber/types'
+export type { FieldType, ExtractedField } from '@antechamber/types'
 
 export interface Submission {
   id: string
@@ -50,25 +53,11 @@ export interface WorkflowStep {
   error?: string
 }
 
-// Citation for extracted field values
-export interface Citation {
-  sourceUrl: string
-  snippetText: string
-  confidence: number
-}
-
-// Extracted field value
-export type ExtractedFieldStatus = 'found' | 'not_found' | 'unknown'
-
-export interface ExtractedFieldValue {
+// Extracted field value — extends shared ExtractedField with console display fields
+export interface ExtractedFieldValue extends ExtractedField {
   fieldKey: string
   fieldLabel: string
   fieldType?: 'string' | 'number' | 'boolean' | 'enum' | 'string[]'
-  value: unknown
-  status: ExtractedFieldStatus
-  confidence: number
-  reason?: string
-  citations: Citation[]
 }
 
 // Crawl artifact

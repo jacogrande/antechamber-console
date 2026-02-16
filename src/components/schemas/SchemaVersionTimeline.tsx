@@ -1,24 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 import type { SchemaVersion } from '@/types/schema'
 
 interface SchemaVersionTimelineProps {
   schemaId: string
   versions: SchemaVersion[]
   currentVersion: number
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 export function SchemaVersionTimeline({
@@ -60,7 +49,7 @@ export function SchemaVersionTimeline({
                 )}
               </div>
               <span className="text-xs text-muted-foreground">
-                {formatDate(version.createdAt)} - {version.fields.length} fields
+                {formatDate(version.createdAt, { hour: '2-digit', minute: '2-digit' })} - {version.fields.length} fields
               </span>
             </div>
             <Button

@@ -16,7 +16,8 @@ import {
 } from '@/components/ui/tooltip'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FieldTypeIcon } from '@/components/schemas/FieldTypeIcon'
-import type { ExtractedFieldValue, ExtractedFieldStatus } from '@/types/submission'
+import type { ExtractedFieldValue } from '@/types/submission'
+import type { FieldStatus } from '@antechamber/types'
 
 interface ExtractedFieldsTableProps {
   fields: ExtractedFieldValue[]
@@ -26,12 +27,13 @@ interface ExtractedFieldsTableProps {
 }
 
 const statusConfig: Record<
-  ExtractedFieldStatus,
-  { label: string; variant: 'default' | 'secondary' | 'destructive' }
+  FieldStatus,
+  { label: string; variant: 'default' | 'secondary' | 'destructive' | 'outline' }
 > = {
-  found: { label: 'Found', variant: 'default' },
-  not_found: { label: 'Not Found', variant: 'secondary' },
+  auto: { label: 'Auto', variant: 'default' },
+  needs_review: { label: 'Needs Review', variant: 'secondary' },
   unknown: { label: 'Unknown', variant: 'destructive' },
+  user_edited: { label: 'Edited', variant: 'outline' },
 }
 
 function ConfidenceIndicator({ confidence }: { confidence: number }) {
@@ -221,15 +223,15 @@ export function ExtractedFieldsTable({
                       {field.citations.slice(0, 2).map((citation, idx) => (
                         <div key={idx} className="text-sm">
                           <p className="text-muted-foreground italic line-clamp-2">
-                            "{citation.snippetText}"
+                            "{citation.snippet}"
                           </p>
                           <a
-                            href={citation.sourceUrl}
+                            href={citation.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-xs text-primary hover:underline inline-flex items-center gap-1 mt-0.5"
                           >
-                            {new URL(citation.sourceUrl).pathname || '/'}
+                            {new URL(citation.url).pathname || '/'}
                             <ExternalLink className="h-3 w-3" />
                           </a>
                         </div>
@@ -245,14 +247,14 @@ export function ExtractedFieldsTable({
                             <div className="space-y-2">
                               {field.citations.slice(2).map((citation, idx) => (
                                 <div key={idx}>
-                                  <p className="text-sm italic">"{citation.snippetText}"</p>
+                                  <p className="text-sm italic">"{citation.snippet}"</p>
                                   <a
-                                    href={citation.sourceUrl}
+                                    href={citation.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="text-xs text-primary hover:underline"
                                   >
-                                    {citation.sourceUrl}
+                                    {citation.url}
                                   </a>
                                 </div>
                               ))}

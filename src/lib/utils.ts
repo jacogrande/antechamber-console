@@ -41,7 +41,8 @@ export function formatRelativeTime(date: Date | string): string {
 /**
  * Format a date in a consistent way
  */
-export function formatDate(date: Date | string, options?: Intl.DateTimeFormatOptions): string {
+export function formatDate(date: Date | string | null, options?: Intl.DateTimeFormatOptions): string {
+  if (!date) return '-'
   const target = typeof date === 'string' ? new Date(date) : date
   return target.toLocaleDateString('en-US', {
     month: 'short',

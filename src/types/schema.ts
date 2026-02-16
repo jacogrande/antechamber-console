@@ -1,20 +1,6 @@
-export type FieldType = 'string' | 'number' | 'boolean' | 'enum' | 'string[]'
+import type { FieldDefinition } from '@antechamber/types'
 
-export interface FieldDefinition {
-  key: string
-  label: string
-  type: FieldType
-  required: boolean
-  instructions: string
-  enumOptions?: string[]
-  validation?: {
-    regex?: string
-    minLen?: number
-    maxLen?: number
-  }
-  confidenceThreshold?: number
-  sourceHints?: string[]
-}
+export type { FieldType, FieldDefinition } from '@antechamber/types'
 
 export interface Schema {
   id: string

@@ -11,14 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
-
-function formatDate(dateString: string): string {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+import { formatDate } from '@/lib/utils'
 
 function OrganizationSection() {
   const { data: tenant, isLoading } = useTenant()
@@ -64,7 +57,7 @@ function OrganizationSection() {
         <div>
           <Label className="text-muted-foreground text-sm">Created</Label>
           <p className="text-muted-foreground">
-            {tenant?.createdAt ? formatDate(tenant.createdAt) : '-'}
+            {tenant?.createdAt ? formatDate(tenant.createdAt, { month: 'long' }) : '-'}
           </p>
         </div>
       </CardContent>

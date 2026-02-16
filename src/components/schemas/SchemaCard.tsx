@@ -3,20 +3,12 @@ import { FileText } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import type { Schema } from '@/types/schema'
+import { formatDate } from '@/lib/utils'
 
 interface SchemaCardProps {
   schema: Schema
   fieldCount?: number
   latestVersion?: number
-}
-
-function formatDate(dateString: string): string {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
 }
 
 export function SchemaCard({ schema, fieldCount, latestVersion }: SchemaCardProps) {

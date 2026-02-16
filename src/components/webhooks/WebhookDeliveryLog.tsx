@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import { useWebhookDeliveries } from '@/hooks/useWebhooks'
 import type { WebhookDelivery } from '@/types/webhook'
+import { formatDate } from '@/lib/utils'
 
 interface WebhookDeliveryLogProps {
   webhookId: string
@@ -31,17 +32,6 @@ function DeliveryStatusBadge({ status }: { status: WebhookDelivery['status'] }) 
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </Badge>
   )
-}
-
-function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '-'
-  const date = new Date(dateStr)
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
 }
 
 export function WebhookDeliveryLog({ webhookId }: WebhookDeliveryLogProps) {
@@ -88,7 +78,7 @@ export function WebhookDeliveryLog({ webhookId }: WebhookDeliveryLogProps) {
             <TableRow key={delivery.id}>
               <TableCell>
                 <span className="text-sm font-mono">
-                  {formatDate(delivery.createdAt)}
+                  {formatDate(delivery.createdAt, { year: undefined, hour: '2-digit', minute: '2-digit' })}
                 </span>
               </TableCell>
               <TableCell>
