@@ -69,15 +69,6 @@ export function Sidebar({ onClose }: SidebarProps) {
         })}
       </div>
 
-      {/* Footer */}
-      <div className="px-4 pt-4">
-        <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
-          <div className="h-2 w-2 rounded-full bg-success" />
-          <span className="text-xs text-muted-foreground">
-            All systems operational
-          </span>
-        </div>
-      </div>
     </nav>
   )
 }

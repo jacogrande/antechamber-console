@@ -172,26 +172,24 @@ export function Login() {
             <RadioGroup value={selectedTenantId} onValueChange={setSelectedTenantId}>
               <div className="space-y-3">
                 {tenants.map((tenant) => (
-                  <div
+                  <label
                     key={tenant.id}
+                    htmlFor={tenant.id}
                     className={cn(
-                      'p-3 rounded-lg border cursor-pointer transition-all',
+                      'block p-3 rounded-lg border cursor-pointer transition-all',
                       selectedTenantId === tenant.id
                         ? 'border-primary bg-primary/5'
                         : 'border-border hover:border-primary'
                     )}
-                    onClick={() => setSelectedTenantId(tenant.id)}
                   >
                     <div className="flex items-center gap-3">
                       <RadioGroupItem value={tenant.id} id={tenant.id} />
                       <div>
-                        <Label htmlFor={tenant.id} className="font-medium text-sm cursor-pointer">
-                          {tenant.name}
-                        </Label>
+                        <span className="font-medium text-sm">{tenant.name}</span>
                         <p className="text-xs text-muted-foreground">{tenant.role}</p>
                       </div>
                     </div>
-                  </div>
+                  </label>
                 ))}
               </div>
             </RadioGroup>
